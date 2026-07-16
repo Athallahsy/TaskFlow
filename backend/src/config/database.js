@@ -8,6 +8,12 @@ const sequelize = new Sequelize(
     host: process.env.DB_HOST || 'localhost',
     dialect: 'mysql',
     logging: false,
+    dialectOptions: process.env.DB_SSL === 'true' ? {
+      ssl: {
+        require: true,
+        rejectUnauthorized: true,
+      }
+    } : {},
     pool: {
       max: 5,
       min: 0,

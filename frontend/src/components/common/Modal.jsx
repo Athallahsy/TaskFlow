@@ -49,17 +49,17 @@ export default function Modal({ isOpen, onClose, title, children, size = 'md' })
       <div
         ref={panelRef}
         className={[
-          'bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] w-full',
+          'bg-surface rounded-xl shadow-modal w-full',
           'flex flex-col max-h-[90vh]',
           sizeClasses[size],
         ].join(' ')}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#E2E8F0]">
-          <h2 id="modal-title" className="text-lg font-bold text-[#0F172A]">{title}</h2>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+          <h2 id="modal-title" className="text-lg font-bold text-text-main font-display">{title}</h2>
           <button
             onClick={handleClose}
-            className="w-8 h-8 flex items-center justify-center rounded-lg text-[#64748B] hover:bg-[#F1F5F9] hover:text-[#0F172A] transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-lg text-text-secondary hover:bg-neutral-bg hover:text-text-main transition-colors"
             aria-label="Tutup modal"
           >
             ✕

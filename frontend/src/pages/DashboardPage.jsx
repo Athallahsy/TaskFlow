@@ -6,10 +6,12 @@ import ProjectCard from '../components/projects/ProjectCard';
 import ProjectForm from '../components/projects/ProjectForm';
 import SummaryChart from '../components/dashboard/SummaryChart';
 import Button from '../components/common/Button';
+import AppShell from '../components/layout/AppShell';
+import Breadcrumb from '../components/layout/Breadcrumb';
 import api from '../api/axios';
 
 export default function DashboardPage() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { showToast } = useToast();
   const { projects, loading, createProject, updateProject, deleteProject } = useProjects();
 
@@ -58,54 +60,46 @@ export default function DashboardPage() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-bg">
-      {/* Navbar */}
-      <header className="bg-surface border-b border-border sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-2 sm:px-3 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-              </svg>
-            </div>
-            <span className="font-bold text-text-main text-lg">TaskFlow</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-text-secondary hidden sm:block">Halo, <strong className="text-text-main">{user?.name}</strong></span>
-            <Button variant="ghost" size="sm" onClick={logout}>Keluar</Button>
-          </div>
-        </div>
-      </header>
+  const breadcrumbItems = [{ label: 'Dashboard' }];
 
-      <main className="max-w-7xl mx-auto px-2 sm:px-3 py-4">
+  return (
+    <AppShell>
+      <div className="p-3">
+        <Breadcrumb items={breadcrumbItems} />
+
+        {/* Welcome Section */}
+        <div className="mb-4">
+          <h1 className="text-2xl font-bold text-text-main font-display">Dashboard</h1>
+          <p className="text-sm text-text-secondary">Selamat datang kembali, {user?.name || 'User'}!</p>
+        </div>
+
         {/* Stats Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-4">
-          <div className="bg-surface rounded-lg border border-border p-3 shadow-card">
+          <div className="bg-surface rounded-xl border border-border border-l-[3px] border-l-primary p-3 shadow-card">
             <p className="text-sm text-text-secondary">Total Project</p>
-            <p className="text-3xl font-bold text-text-main mt-1">{summary?.totalProjects ?? '—'}</p>
+            <p className="text-3xl font-bold text-text-main mt-1 font-display">{summary?.totalProjects ?? '—'}</p>
           </div>
-          <div className="bg-surface rounded-lg border border-border p-3 shadow-card">
+          <div className="bg-surface rounded-xl border border-border border-l-[3px] border-l-success p-3 shadow-card">
             <p className="text-sm text-text-secondary">Task Selesai</p>
-            <p className="text-3xl font-bold text-success mt-1">{summary?.taskStats?.done ?? '—'}</p>
+            <p className="text-3xl font-bold text-success mt-1 font-display">{summary?.taskStats?.done ?? '—'}</p>
           </div>
-          <div className="bg-surface rounded-lg border border-border p-3 shadow-card">
+          <div className="bg-surface rounded-xl border border-border border-l-[3px] border-l-warning p-3 shadow-card">
             <p className="text-sm text-text-secondary">Sedang Dikerjakan</p>
-            <p className="text-3xl font-bold text-warning mt-1">{summary?.taskStats?.in_progress ?? '—'}</p>
+            <p className="text-3xl font-bold text-warning mt-1 font-display">{summary?.taskStats?.in_progress ?? '—'}</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {/* Chart */}
-          <div className="bg-surface rounded-lg border border-border p-3 shadow-card">
-            <h2 className="font-semibold text-text-main mb-2">Progres Task</h2>
+          <div className="bg-surface rounded-xl border border-border p-3 shadow-card">
+            <h2 className="font-semibold text-text-main mb-2 font-display">Progres Task</h2>
             <SummaryChart taskStats={summary?.taskStats} />
           </div>
 
           {/* Project List */}
           <div className="md:col-span-2">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="font-semibold text-text-main text-lg">Project Kamu</h2>
+              <h2 className="font-semibold text-text-main text-lg font-display">Project Kamu</h2>
               <Button size="sm" onClick={() => { setEditingProject(null); setModalOpen(true); }}>
                 + Buat Project Baru
               </Button>
@@ -116,8 +110,8 @@ export default function DashboardPage() {
                 <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
               </div>
             ) : projects.length === 0 ? (
-              <div className="text-center py-6 bg-surface rounded-lg border border-dashed border-border shadow-card">
-                <div className="w-12 h-12 bg-primary-light rounded-lg flex items-center justify-center mx-auto mb-2">
+              <div className="text-center py-6 bg-surface rounded-xl border border-dashed border-border shadow-card">
+                <div className="w-12 h-12 bg-primary-light rounded-xl flex items-center justify-center mx-auto mb-2">
                   <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
@@ -141,7 +135,7 @@ export default function DashboardPage() {
             )}
           </div>
         </div>
-      </main>
+      </div>
 
       {/* Project Form Modal */}
       <ProjectForm
@@ -155,9 +149,9 @@ export default function DashboardPage() {
       {/* Delete Confirmation Modal */}
       {deleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-[0_20px_60px_rgba(0,0,0,0.15)]">
-            <h3 className="font-bold text-[#0F172A] text-lg mb-2">Hapus Project?</h3>
-            <p className="text-sm text-[#64748B] mb-6">
+          <div className="bg-white rounded-xl p-6 max-w-sm w-full shadow-[0_20px_60px_rgba(0,0,0,0.15)]">
+            <h3 className="font-bold text-text-main text-lg mb-2 font-display">Hapus Project?</h3>
+            <p className="text-sm text-text-secondary mb-6">
               Hapus project ini? Semua task di dalamnya juga akan terhapus.
             </p>
             <div className="flex gap-3 justify-end">
@@ -167,6 +161,6 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
-    </div>
+    </AppShell>
   );
 }

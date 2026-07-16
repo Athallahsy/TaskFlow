@@ -1,18 +1,22 @@
+/**
+ * StatusBadge — semantic status indicator using Design System v2 colours.
+ * status: 'todo' | 'in_progress' | 'done'
+ */
 const STATUS_CONFIG = {
   todo: {
     label: 'To Do',
     icon: '○',
-    classes: 'bg-[#F1F5F9] text-[#64748B]',
+    classes: 'bg-neutral-bg text-text-secondary',
   },
   in_progress: {
     label: 'In Progress',
     icon: '◑',
-    classes: 'bg-[#FFFBEB] text-[#92400E]',
+    classes: 'bg-warning-bg text-warning',
   },
   done: {
     label: 'Selesai',
     icon: '●',
-    classes: 'bg-[#F0FDF4] text-[#166534]',
+    classes: 'bg-success-bg text-success',
   },
 };
 

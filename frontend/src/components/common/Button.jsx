@@ -4,10 +4,10 @@
  * size: 'sm' | 'md' | 'lg'
  */
 const variantClasses = {
-  primary: 'bg-[#4F46E5] text-white hover:bg-[#4338CA] focus-visible:ring-[#4F46E5]',
-  secondary: 'bg-white text-[#0F172A] border border-[#E2E8F0] hover:bg-[#F8FAFC] focus-visible:ring-[#4F46E5]',
-  danger: 'bg-[#EF4444] text-white hover:bg-[#DC2626] focus-visible:ring-[#EF4444]',
-  ghost: 'bg-transparent text-[#64748B] hover:bg-[#F1F5F9] focus-visible:ring-[#4F46E5]',
+  primary:   'bg-primary text-white hover:bg-primary-hover focus-visible:ring-primary',
+  secondary: 'bg-surface text-text-main border border-border hover:bg-neutral-bg focus-visible:ring-primary',
+  danger:    'bg-danger text-white hover:bg-[#B83535] focus-visible:ring-danger',
+  ghost:     'bg-transparent text-text-secondary hover:bg-neutral-bg focus-visible:ring-primary',
 };
 
 const sizeClasses = {

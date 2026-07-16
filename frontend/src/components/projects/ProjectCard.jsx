@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom';
 
 export default function ProjectCard({ project, onEdit, onDelete }) {
   return (
-    <div className="bg-surface rounded-lg border border-border p-3 shadow-card hover:-translate-y-1 hover:shadow-card-hover transition-all duration-150 group">
+    <div className="bg-surface rounded-xl border border-border border-l-[3px] border-l-primary p-3 shadow-card hover:scale-[1.02] hover:shadow-card-hover transition-all duration-150 origin-center group">
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <Link
             to={`/projects/${project.id}`}
-            className="block font-semibold text-text-main hover:text-primary transition-colors truncate text-base"
+            className="block font-semibold text-text-main hover:text-primary transition-colors truncate text-base font-display"
           >
             {project.name}
           </Link>

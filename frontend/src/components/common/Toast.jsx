@@ -1,10 +1,14 @@
 import { useEffect, useRef } from 'react';
 import { toastIn, toastOut } from '../../utils/animations';
 
+/**
+ * Toast notification — Design System v2 colours.
+ * type: 'success' | 'error' | 'info'
+ */
 const TYPE_CONFIG = {
-  success: { bg: 'bg-[#22C55E]', icon: '✓' },
-  error: { bg: 'bg-[#EF4444]', icon: '✕' },
-  info: { bg: 'bg-[#4F46E5]', icon: 'ℹ' },
+  success: { bg: 'bg-success',  icon: '✓' },
+  error:   { bg: 'bg-danger',   icon: '✕' },
+  info:    { bg: 'bg-primary',  icon: 'ℹ' },
 };
 
 export default function Toast({ message, type = 'success', onClose }) {

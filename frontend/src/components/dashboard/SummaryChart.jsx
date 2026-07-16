@@ -19,7 +19,7 @@ export default function SummaryChart({ taskStats }) {
     datasets: [
       {
         data: [taskStats?.todo || 0, taskStats?.in_progress || 0, taskStats?.done || 0],
-        backgroundColor: ['#94A3B8', '#F59E0B', '#22C55E'],
+        backgroundColor: ['#87928E', '#D97706', '#107B57'],
         borderColor: ['#FFFFFF', '#FFFFFF', '#FFFFFF'],
         borderWidth: 3,
         hoverOffset: 6,
@@ -36,8 +36,8 @@ export default function SummaryChart({ taskStats }) {
         position: 'bottom',
         labels: {
           padding: 20,
-          font: { family: 'Inter', size: 13 },
-          color: '#0F172A',
+          font: { family: 'Manrope', size: 13 },
+          color: '#1D2D29',
           usePointStyle: true,
         },
       },
@@ -51,7 +51,7 @@ export default function SummaryChart({ taskStats }) {
 
   if (total === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-52 text-[#94A3B8]">
+      <div className="flex flex-col items-center justify-center h-52 text-text-secondary">
         <p className="text-sm">Belum ada task untuk ditampilkan.</p>
       </div>
     );
@@ -61,8 +61,8 @@ export default function SummaryChart({ taskStats }) {
     <div ref={wrapperRef} className="relative h-56">
       {/* Center total */}
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none" style={{ bottom: '40px' }}>
-        <span className="text-3xl font-bold text-[#0F172A]">{total}</span>
-        <span className="text-xs text-[#64748B]">Total Task</span>
+        <span className="text-3xl font-bold text-text-main font-display">{total}</span>
+        <span className="text-xs text-text-secondary">Total Task</span>
       </div>
       <Doughnut data={data} options={options} />
     </div>

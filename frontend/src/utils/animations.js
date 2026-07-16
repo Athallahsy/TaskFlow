@@ -118,3 +118,36 @@ export const animateChartIn = (el) => {
     { opacity: 1, scale: 1, duration: 0.6, ease: 'power2.out' }
   );
 };
+
+/**
+ * Hover card in — scale(1.02) from center + stronger shadow via class toggle.
+ * CSS handles the shadow via hover:shadow-card-hover; this function is for
+ * programmatic use (e.g. drag-and-drop previews) or future interactive surfaces.
+ *
+ * Duration: 150ms, easing: power1.out. transform-origin: center (GSAP default).
+ */
+export const hoverCardIn = (el) => {
+  if (prefersReducedMotion()) return;
+  gsap.to(el, {
+    scale: 1.02,
+    duration: 0.15,
+    ease: 'power1.out',
+    transformOrigin: 'center center',
+    overwrite: 'auto',
+  });
+};
+
+/**
+ * Hover card out — return to scale(1).
+ * Mirrors hoverCardIn with the same duration/easing.
+ */
+export const hoverCardOut = (el) => {
+  if (prefersReducedMotion()) return;
+  gsap.to(el, {
+    scale: 1,
+    duration: 0.15,
+    ease: 'power1.out',
+    transformOrigin: 'center center',
+    overwrite: 'auto',
+  });
+};

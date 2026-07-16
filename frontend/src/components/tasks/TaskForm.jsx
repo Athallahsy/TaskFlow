@@ -8,6 +8,13 @@ const STATUS_OPTIONS = [
   { value: 'done', label: 'Selesai' },
 ];
 
+// Shared input/select class string using Design System v2 tokens
+const inputBase = [
+  'w-full px-3.5 py-2.5 rounded-lg border text-text-main text-sm transition',
+  'focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent',
+  'placeholder:text-neutral bg-surface',
+].join(' ');
+
 export default function TaskForm({ isOpen, onClose, onSubmit, initialData, loading }) {
   const [form, setForm] = useState({ title: '', description: '', status: 'todo', deadline: '' });
   const [errors, setErrors] = useState({});
@@ -60,8 +67,8 @@ export default function TaskForm({ isOpen, onClose, onSubmit, initialData, loadi
         <div className="space-y-4">
           {/* Title */}
           <div>
-            <label htmlFor="task-title" className="block text-sm font-medium text-[#0F172A] mb-1.5">
-              Judul Task <span className="text-[#EF4444]">*</span>
+            <label htmlFor="task-title" className="block text-sm font-medium text-text-main mb-1.5">
+              Judul Task <span className="text-danger">*</span>
             </label>
             <input
               id="task-title"
@@ -70,20 +77,15 @@ export default function TaskForm({ isOpen, onClose, onSubmit, initialData, loadi
               value={form.title}
               onChange={handleChange}
               placeholder="Apa yang perlu dikerjakan?"
-              className={[
-                'w-full px-3.5 py-2.5 rounded-lg border text-[#0F172A] text-sm',
-                'focus:outline-none focus:ring-2 focus:ring-[#4F46E5] focus:border-transparent transition',
-                'placeholder:text-[#94A3B8]',
-                errors.title ? 'border-[#EF4444] bg-[#FEF2F2]' : 'border-[#E2E8F0] bg-white',
-              ].join(' ')}
+              className={[inputBase, errors.title ? 'border-danger bg-danger-bg' : 'border-border'].join(' ')}
             />
-            {errors.title && <p className="mt-1 text-xs text-[#EF4444]">{errors.title}</p>}
+            {errors.title && <p className="mt-1 text-xs text-danger">{errors.title}</p>}
           </div>
 
           {/* Description */}
           <div>
-            <label htmlFor="task-desc" className="block text-sm font-medium text-[#0F172A] mb-1.5">
-              Deskripsi <span className="text-[#94A3B8] font-normal">(opsional)</span>
+            <label htmlFor="task-desc" className="block text-sm font-medium text-text-main mb-1.5">
+              Deskripsi <span className="text-neutral font-normal">(opsional)</span>
             </label>
             <textarea
               id="task-desc"
@@ -92,20 +94,20 @@ export default function TaskForm({ isOpen, onClose, onSubmit, initialData, loadi
               onChange={handleChange}
               placeholder="Tambahkan detail task..."
               rows={3}
-              className="w-full px-3.5 py-2.5 rounded-lg border border-[#E2E8F0] text-[#0F172A] text-sm focus:outline-none focus:ring-2 focus:ring-[#4F46E5] focus:border-transparent transition placeholder:text-[#94A3B8] resize-none"
+              className={[inputBase, 'border-border resize-none'].join(' ')}
             />
           </div>
 
           {/* Status + Deadline row */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label htmlFor="task-status" className="block text-sm font-medium text-[#0F172A] mb-1.5">Status</label>
+              <label htmlFor="task-status" className="block text-sm font-medium text-text-main mb-1.5">Status</label>
               <select
                 id="task-status"
                 name="status"
                 value={form.status}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-[#E2E8F0] text-[#0F172A] text-sm focus:outline-none focus:ring-2 focus:ring-[#4F46E5] focus:border-transparent transition bg-white"
+                className={[inputBase, 'border-border'].join(' ')}
               >
                 {STATUS_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -113,8 +115,8 @@ export default function TaskForm({ isOpen, onClose, onSubmit, initialData, loadi
               </select>
             </div>
             <div>
-              <label htmlFor="task-deadline" className="block text-sm font-medium text-[#0F172A] mb-1.5">
-                Deadline <span className="text-[#94A3B8] font-normal">(opsional)</span>
+              <label htmlFor="task-deadline" className="block text-sm font-medium text-text-main mb-1.5">
+                Deadline <span className="text-neutral font-normal">(opsional)</span>
               </label>
               <input
                 id="task-deadline"
@@ -122,7 +124,7 @@ export default function TaskForm({ isOpen, onClose, onSubmit, initialData, loadi
                 name="deadline"
                 value={form.deadline}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-[#E2E8F0] text-[#0F172A] text-sm focus:outline-none focus:ring-2 focus:ring-[#4F46E5] focus:border-transparent transition"
+                className={[inputBase, 'border-border'].join(' ')}
               />
             </div>
           </div>

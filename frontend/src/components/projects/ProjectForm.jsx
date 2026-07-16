@@ -2,6 +2,13 @@ import { useState, useEffect } from 'react';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
 
+// Shared input class string using Design System v2 tokens
+const inputBase = [
+  'w-full px-3.5 py-2.5 rounded-lg border text-text-main text-sm transition',
+  'focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent',
+  'placeholder:text-neutral',
+].join(' ');
+
 export default function ProjectForm({ isOpen, onClose, onSubmit, initialData, loading }) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -39,8 +46,8 @@ export default function ProjectForm({ isOpen, onClose, onSubmit, initialData, lo
       <form onSubmit={handleSubmit} noValidate>
         <div className="space-y-4">
           <div>
-            <label htmlFor="project-name" className="block text-sm font-medium text-[#0F172A] mb-1.5">
-              Nama Project <span className="text-[#EF4444]">*</span>
+            <label htmlFor="project-name" className="block text-sm font-medium text-text-main mb-1.5">
+              Nama Project <span className="text-danger">*</span>
             </label>
             <input
               id="project-name"
@@ -48,19 +55,14 @@ export default function ProjectForm({ isOpen, onClose, onSubmit, initialData, lo
               value={name}
               onChange={(e) => { setName(e.target.value); setErrors((p) => ({ ...p, name: '' })); }}
               placeholder="Contoh: Website Portofolio"
-              className={[
-                'w-full px-3.5 py-2.5 rounded-lg border text-[#0F172A] text-sm',
-                'focus:outline-none focus:ring-2 focus:ring-[#4F46E5] focus:border-transparent transition',
-                'placeholder:text-[#94A3B8]',
-                errors.name ? 'border-[#EF4444] bg-[#FEF2F2]' : 'border-[#E2E8F0] bg-white',
-              ].join(' ')}
+              className={[inputBase, errors.name ? 'border-danger bg-danger-bg' : 'border-border bg-surface'].join(' ')}
             />
-            {errors.name && <p className="mt-1 text-xs text-[#EF4444]">{errors.name}</p>}
+            {errors.name && <p className="mt-1 text-xs text-danger">{errors.name}</p>}
           </div>
 
           <div>
-            <label htmlFor="project-desc" className="block text-sm font-medium text-[#0F172A] mb-1.5">
-              Deskripsi <span className="text-[#94A3B8] font-normal">(opsional)</span>
+            <label htmlFor="project-desc" className="block text-sm font-medium text-text-main mb-1.5">
+              Deskripsi <span className="text-neutral font-normal">(opsional)</span>
             </label>
             <textarea
               id="project-desc"
@@ -68,7 +70,7 @@ export default function ProjectForm({ isOpen, onClose, onSubmit, initialData, lo
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Apa yang ingin kamu capai di project ini?"
               rows={3}
-              className="w-full px-3.5 py-2.5 rounded-lg border border-[#E2E8F0] text-[#0F172A] text-sm focus:outline-none focus:ring-2 focus:ring-[#4F46E5] focus:border-transparent transition placeholder:text-[#94A3B8] resize-none"
+              className={[inputBase, 'border-border bg-surface resize-none'].join(' ')}
             />
           </div>
         </div>

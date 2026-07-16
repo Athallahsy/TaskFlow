@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useToast } from '../components/common/ToastContainer';
 import { useTasks } from '../hooks/useTasks';
 import KanbanColumn from '../components/tasks/KanbanColumn';
 import TaskForm from '../components/tasks/TaskForm';
 import Button from '../components/common/Button';
+import AppShell from '../components/layout/AppShell';
+import Breadcrumb from '../components/layout/Breadcrumb';
 import api from '../api/axios';
 
 const STATUSES = ['todo', 'in_progress', 'done'];
@@ -72,35 +74,31 @@ export default function ProjectDetailPage() {
     }
   };
 
+  const breadcrumbItems = [
+    { label: 'Projects', href: '/dashboard' },
+    { label: project?.name || '...' }
+  ];
+
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
-      {/* Navbar */}
-      <header className="bg-surface border-b border-border sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-2 sm:px-3 h-16 flex items-center gap-2">
-          <Link
-            to="/dashboard"
-            className="p-2 rounded-lg text-text-secondary hover:bg-neutral-bg hover:text-text-main transition-colors"
-            aria-label="Kembali ke dashboard"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </Link>
-          <div className="flex-1 min-w-0">
-            <h1 className="font-bold text-text-main text-lg truncate">
+    <AppShell>
+      <div className="p-3">
+        <Breadcrumb items={breadcrumbItems} />
+
+        {/* Project Header Bar */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3 mt-2">
+          <div>
+            <h1 className="text-2xl font-bold text-text-main font-display">
               {project?.name || 'Memuat...'}
             </h1>
             {project?.description && (
-              <p className="text-xs text-text-secondary truncate">{project.description}</p>
+              <p className="text-sm text-text-secondary mt-0.5">{project.description}</p>
             )}
           </div>
-          <Button size="sm" onClick={() => { setEditingTask(null); setTaskModalOpen(true); }}>
+          <Button size="sm" onClick={() => { setEditingTask(null); setTaskModalOpen(true); }} className="flex-shrink-0 self-start sm:self-center">
             + Tambah Task
           </Button>
         </div>
-      </header>
 
-      <main className="max-w-7xl mx-auto px-2 sm:px-3 py-3">
         {/* Filter chips */}
         <div className="flex gap-2 mb-3 overflow-x-auto pb-1">
           {[{ value: 'all', label: 'Semua' }, { value: 'todo', label: 'To Do' }, { value: 'in_progress', label: 'In Progress' }, { value: 'done', label: 'Selesai' }].map((opt) => (
@@ -110,7 +108,7 @@ export default function ProjectDetailPage() {
               className={[
                 'px-4 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap',
                 filterStatus === opt.value
-                  ? 'bg-primary text-white'
+                  ? 'bg-primary text-white font-semibold'
                   : 'bg-surface text-text-secondary border border-border hover:border-primary hover:text-primary',
               ].join(' ')}
             >
@@ -140,7 +138,7 @@ export default function ProjectDetailPage() {
             </div>
           </div>
         )}
-      </main>
+      </div>
 
       {/* Task Form Modal */}
       <TaskForm
@@ -154,9 +152,9 @@ export default function ProjectDetailPage() {
       {/* Delete confirmation */}
       {deleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-[0_20px_60px_rgba(0,0,0,0.15)]">
-            <h3 className="font-bold text-[#0F172A] text-lg mb-2">Hapus Task?</h3>
-            <p className="text-sm text-[#64748B] mb-6">Task <strong>{deleteConfirm.title}</strong> akan dihapus secara permanen.</p>
+          <div className="bg-white rounded-xl p-6 max-w-sm w-full shadow-[0_20px_60px_rgba(0,0,0,0.15)]">
+            <h3 className="font-bold text-text-main text-lg mb-2 font-display">Hapus Task?</h3>
+            <p className="text-sm text-text-secondary mb-6">Task <strong>{deleteConfirm.title}</strong> akan dihapus secara permanen.</p>
             <div className="flex gap-3 justify-end">
               <Button variant="secondary" onClick={() => setDeleteConfirm(null)}>Batal</Button>
               <Button variant="danger" onClick={handleDeleteConfirm}>Hapus Task</Button>
@@ -164,6 +162,6 @@ export default function ProjectDetailPage() {
           </div>
         </div>
       )}
-    </div>
+    </AppShell>
   );
 }

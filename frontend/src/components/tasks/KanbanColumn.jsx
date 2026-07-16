@@ -7,17 +7,17 @@ const COLUMN_CONFIG = {
   todo: {
     label: 'To Do',
     textColor: 'text-text-main',
-    dotColor: 'bg-neutral', // slate-400
+    dotColor: 'bg-neutral',
   },
   in_progress: {
     label: 'In Progress',
     textColor: 'text-text-main',
-    dotColor: 'bg-warning', // amber-500
+    dotColor: 'bg-warning',
   },
   done: {
     label: 'Selesai',
     textColor: 'text-text-main',
-    dotColor: 'bg-success', // green-500
+    dotColor: 'bg-success',
   },
 };
 
@@ -47,7 +47,7 @@ export default function KanbanColumn({ status, tasks, onEdit, onDelete, onStatus
       <div ref={listRef} className="flex flex-col gap-3 flex-1">
         {tasks.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 text-center">
-            <p className="text-sm text-[#94A3B8]">Belum ada task di sini.</p>
+            <p className="text-sm text-neutral">Belum ada task di sini.</p>
           </div>
         ) : (
           tasks.map((task) => (
@@ -70,7 +70,7 @@ export default function KanbanColumn({ status, tasks, onEdit, onDelete, onStatus
             variant="ghost"
             size="sm"
             onClick={onAddTask}
-            className="w-full justify-start text-[#64748B] border border-dashed border-[#E2E8F0] hover:border-[#4F46E5] hover:text-[#4F46E5]"
+            className="w-full justify-start text-text-secondary border border-dashed border-border hover:border-primary hover:text-primary"
           >
             + Tambah Task
           </Button>

@@ -16,10 +16,19 @@ export default function TaskCard({ task, onEdit, onDelete, onStatusChange }) {
   const nextStatus = currentIdx < statusOrder.length - 1 ? statusOrder[currentIdx + 1] : null;
   const prevStatus = currentIdx > 0 ? statusOrder[currentIdx - 1] : null;
 
+  const statusBorderClasses = {
+    todo: 'border-l-neutral',
+    in_progress: 'border-l-warning',
+    done: 'border-l-success',
+  };
+
   return (
     <div
       ref={cardRef}
-      className="bg-surface rounded-lg border border-border p-2 shadow-card hover:-translate-y-1 hover:shadow-card-hover transition-all duration-150 group"
+      className={[
+        'bg-surface rounded-xl border border-border border-l-[3px] p-2 shadow-card hover:scale-[1.02] hover:shadow-card-hover transition-all duration-150 origin-center group',
+        statusBorderClasses[task.status] || 'border-l-neutral',
+      ].join(' ')}
     >
       {/* Header */}
       <div className="flex items-start gap-1 justify-between">

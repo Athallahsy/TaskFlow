@@ -1,29 +1,32 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-brand: 'Pinyon Script', cursive;
 
-  /* Design System Colors */
-  --color-primary: #4F46E5;
-  --color-primary-hover: #4338CA;
-  --color-primary-light: #EEF2FF;
+  /* Design System v2 Colors */
+  --color-primary: #0F6E56;
+  --color-primary-hover: #0B5240;
+  --color-primary-light: #E6EFEA;
 
-  --color-text-main: #0F172A;
-  --color-text-secondary: #64748B;
+  --color-text-main: #1D2D29;
+  --color-text-secondary: #6B7773;
 
-  --color-bg: #F8FAFC;
+  --color-bg: #F7F4EF;
   --color-surface: #FFFFFF;
+  --color-sidebar-bg: #EFECE5;
 
-  --color-success: #22C55E;
-  --color-success-bg: #F0FDF4;
-  --color-warning: #F59E0B;
-  --color-warning-bg: #FFFBEB;
-  --color-neutral: #94A3B8;
-  --color-neutral-bg: #F1F5F9;
-  --color-danger: #EF4444;
-  --color-danger-bg: #FEF2F2;
+  --color-success: #107B57;
+  --color-success-bg: #E6F5EF;
+  --color-warning: #D97706;
+  --color-warning-bg: #FEF3C7;
+  --color-neutral: #87928E;
+  --color-neutral-bg: #EEF1F0;
+  --color-danger: #D94646;
+  --color-danger-bg: #FEE2E2;
 
-  --color-border: #E2E8F0;
+  --color-border: #E2ECE9;
 
   /* Spacing — 8px grid */
   --spacing-1: 8px;
@@ -33,7 +36,7 @@
   --spacing-6: 48px;
 
   /* Shadows */
-  --shadow-card: 0 2px 8px rgba(0,0,0,0.10), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
   --shadow-card-hover: 0 4px 12px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.06);
   --shadow-modal: 0 20px 60px rgba(0,0,0,0.15);
 }
@@ -53,6 +56,10 @@
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
   }
+
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+  }
 }
 
 /* Scrollbar styling */
@@ -64,15 +71,422 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: var(--color-border);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: var(--color-neutral);
 }
 
 /* Focus visible */
 :focus-visible {
-  outline: 2px solid #4F46E5;
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+.font-brand {
+  font-family: var(--font-brand);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   AUTH — Sliding Overlay Layout
+   ═══════════════════════════════════════════════════════════════
+
+   Desktop (≥768px):
+   ┌──────────────────────────────────────────────────────────────┐
+   │  [Register 50%, left:0%]  [Login 50%, left:50%]             │
+   │  [──── Carousel panel 50%, absolute, left:0%↔50% ────]      │
+   └──────────────────────────────────────────────────────────────┘
+   Mobile: Carousel hidden. Active form = full width.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Page shell */
+.auth-page {
+  min-height: 100svh;
+  background-color: var(--color-bg);
+  display: flex;
+  align-items: stretch;
+}
+
+/* ── Overlay forms container ────────────────────────────────── */
+.auth-overlay__forms {
+  position: relative;       /* anchor for absolute carousel */
+  width: 100%;
+  min-height: 100svh;
+  overflow: hidden;         /* clip carousel when sliding */
+  display: flex;
+}
+
+/* ── Form panes ─────────────────────────────────────────────── */
+/*
+   Mobile: only active pane shown (display:flex toggle).
+   Desktop: both always in DOM, positioned absolutely, opacity-crossfade.
+*/
+.auth-overlay__pane {
+  display: none;
+  width: 100%;
+  padding: 40px 24px;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg);
+  transition: opacity 220ms ease;
+}
+
+/* Mobile: only active is visible */
+.auth-overlay__pane--active {
+  display: flex;
+}
+
+/* Desktop overrides */
+@media (min-width: 768px) {
+  .auth-overlay__pane {
+    display: flex;
+    position: absolute;
+    top: 0;
+    width: 50%;
+    min-height: 100svh;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .auth-overlay__pane--register { left: 0; }
+  .auth-overlay__pane--login    { left: 50%; }
+
+  .auth-overlay__pane--active {
+    pointer-events: auto;
+    opacity: 1;
+  }
+}
+
+/* ── Carousel panel (the sliding teal block) ─────────────────── */
+.auth-overlay__carousel {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .auth-overlay__carousel {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;                /* GSAP animates left: 0% ↔ 50% */
+    width: 50%;
+    min-height: 100svh;
+    background-color: var(--color-primary);
+    z-index: 10;
+    overflow: hidden;
+    will-change: left;
+  }
+}
+
+/* ── Form wrapper ─────────────────────────────────────────────── */
+.auth-form-wrapper {
+  width: 100%;
+  max-width: 400px;
+}
+
+/* ─── Logo row ──────────────────────────────────────────────── */
+.auth-form__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+.auth-form__logo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background-color: var(--color-primary);
+  border-radius: 11px;
+  flex-shrink: 0;
+}
+
+.auth-form__brand {
+  font-family: var(--font-brand);
+  font-size: 2.25rem;
+  font-weight: normal;
+  color: var(--color-text-main);
+  line-height: 1;
+}
+
+/* ─── Headings ──────────────────────────────────────────────── */
+.auth-form__title {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.auth-form__subtitle {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 28px;
+}
+
+/* ─── Error banner ──────────────────────────────────────────── */
+.auth-form__error-banner {
+  background-color: var(--color-danger-bg);
+  border: 1px solid color-mix(in srgb, var(--color-danger) 30%, transparent);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  color: var(--color-danger);
+  margin-bottom: 20px;
+}
+
+/* ─── Form layout ───────────────────────────────────────────── */
+.auth-form__form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ─── Field — underline-only ─────────────────────────────────── */
+.auth-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-field__label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 6px;
+}
+
+.auth-field__input {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--color-border);
+  border-radius: 0;
+  padding: 8px 0 10px;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  color: var(--color-text-main);
+  transition: border-color 200ms ease;
+  outline: none;
+  width: 100%;
+}
+
+.auth-field__input::placeholder {
+  color: var(--color-neutral);
+}
+
+.auth-field__input:focus {
+  border-bottom-color: var(--color-primary);
+}
+
+.auth-field__input--error {
+  border-bottom-color: var(--color-danger);
+}
+
+.auth-field__error-msg {
+  font-size: 0.75rem;
+  color: var(--color-danger);
+  margin-top: 5px;
+}
+
+/* ─── Submit pill button ─────────────────────────────────────── */
+.auth-submit-btn {
+  width: 100%;
+  min-height: 50px;
+  margin-top: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 999px;
+  background-color: #241F1A;
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  transition: background-color 180ms ease, transform 120ms ease, box-shadow 180ms ease;
+  box-shadow: 0 2px 8px rgba(36, 31, 26, 0.22);
+}
+
+.auth-submit-btn:hover:not(:disabled) {
+  background-color: #3a3229;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(36, 31, 26, 0.32);
+}
+
+.auth-submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(36, 31, 26, 0.22);
+}
+
+.auth-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ─── Footer / toggle link ──────────────────────────────────── */
+.auth-form__footer {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin-top: 24px;
+}
+
+.auth-form__link {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+
+/* Toggle button styled as link */
+.auth-form__link--btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.auth-form__link:hover,
+.auth-form__link--btn:hover {
+  color: var(--color-primary-hover);
+  text-decoration: underline;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   AUTH CAROUSEL
+   ═══════════════════════════════════════════════════════════════ */
+.auth-carousel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 100svh;
+  padding: 48px 36px;
+  gap: 32px;
+}
+
+/* Decorative blobs */
+.auth-carousel__blob {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  pointer-events: none;
+}
+
+.auth-carousel__blob--1 {
+  width: 340px;
+  height: 340px;
+  top: -100px;
+  right: -100px;
+}
+
+.auth-carousel__blob--2 {
+  width: 240px;
+  height: 240px;
+  bottom: -80px;
+  left: -80px;
+}
+
+/* Slide content */
+.auth-carousel__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  z-index: 1;
+  text-align: center;
+}
+
+/* Placeholder dashed box */
+.auth-carousel__placeholder {
+  width: 176px;
+  height: 176px;
+  border: 2px dashed rgba(255, 255, 255, 0.38);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.auth-carousel__placeholder-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Icon SVG class — applied via className in JSX */
+.auth-carousel__icon {
+  width: 88px;
+  height: 88px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* Text block */
+.auth-carousel__text {
+  max-width: 300px;
+}
+
+.auth-carousel__headline {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.25;
+  margin-bottom: 10px;
+}
+
+.auth-carousel__subtext {
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.76);
+  line-height: 1.6;
+}
+
+/* Dot indicators */
+.auth-carousel__dots {
+  display: flex;
+  gap: 8px;
+  z-index: 1;
+}
+
+.auth-carousel__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.32);
+  cursor: pointer;
+  padding: 0;
+  transition: width 260ms ease, background-color 260ms ease;
+}
+
+.auth-carousel__dot--active {
+  width: 26px;
+  background: #ffffff;
+}
+
+.auth-carousel__dot:hover:not(.auth-carousel__dot--active) {
+  background: rgba(255, 255, 255, 0.58);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Reduced-motion overrides
+   ═══════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .auth-overlay__pane,
+  .auth-submit-btn,
+  .auth-field__input,
+  .auth-carousel__dot {
+    transition: none;
+  }
 }

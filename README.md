@@ -10,15 +10,11 @@ Aplikasi manajemen proyek & task sederhana (mirip Trello/Jira minimalis) — dib
 
 ## 📸 Screenshot
 
-<!--
-Ganti bagian ini dengan screenshot aplikasi kamu:
-1. Simpan gambar di folder `screenshots/`
-2. Ganti path di bawah sesuai nama file kamu
 
 ![Dashboard](screenshots/dashboard.png)
 ![Kanban Board](screenshots/kanban.png)
 ![Login](screenshots/login.png)
--->
+
 
 ## ✨ Fitur
 

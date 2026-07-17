@@ -10,10 +10,9 @@ Aplikasi manajemen proyek & task sederhana (mirip Trello/Jira minimalis) — dib
 
 ## 📸 Screenshot
 
-
+![Login](screenshots/login.png)
 ![Dashboard](screenshots/dashboard.png)
 ![Kanban Board](screenshots/kanban.png)
-![Login](screenshots/login.png)
 
 
 ## ✨ Fitur

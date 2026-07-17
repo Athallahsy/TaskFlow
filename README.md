@@ -1,134 +1,203 @@
-# TaskFlow — Aplikasi Manajemen Proyek & Task
+# TaskFlow
 
-TaskFlow adalah aplikasi manajemen proyek dan task minimalis (mirip Trello / Jira minimalis) yang dirancang dengan antarmuka modern, interaksi dinamis, dan performa responsif. Aplikasi ini menggunakan arsitektur fullstack dengan backend Node.js (Express & Sequelize ORM) dan frontend React (Vite & Tailwind CSS v4).
+Aplikasi manajemen proyek & task sederhana (mirip Trello/Jira minimalis) — dibangun sebagai portofolio Fullstack Developer, dengan backend REST API dari nol, autentikasi JWT, dan integrasi frontend-backend yang sepenuhnya nyata (bukan data dummy).
 
-Aplikasi ini dikembangkan sebagai portofolio profesional untuk menunjukkan penerapan kode yang rapi, praktik terbaik keamanan (JWT, hashing password, otorisasi data), serta antarmuka yang sangat diperhatikan estetikanya.
+**🔗 Live Demo:** [taskflow-frontend-atha.vercel.app](https://taskflow-frontend-atha.vercel.app)
 
----
-
-## Fitur Utama
-
-- **Sliding Overlay Auth Page**: Halaman masuk dan daftar dinamis yang digabung dalam satu komponen (`AuthPage.jsx`). Panel promosi (`AuthCarousel`) meluncur secara interaktif menggunakan GSAP (`power3.inOut`) di atas form login dan register tanpa memicu *full remount* halaman.
-- **Auto-slide Carousel**: Carousel informasi fitur di panel autentikasi dengan transisi crossfade otomatis setiap 4.5 detik (menghormati preferensi aksesibilitas `prefers-reduced-motion`).
-- **Dashboard Progres**: Grafik statistik ringkasan status task (To Do, In Progress, Done) menggunakan `react-chartjs-2` dan ringkasan seluruh proyek aktif.
-- **Papan Kanban Proyek**: Tampilan detail proyek dengan papan Kanban interaktif untuk mengelola dan memindahkan status task (To Do $\rightarrow$ In Progress $\rightarrow$ Done) dilengkapi animasi transisi GSAP.
-- **Desain Tipografi Mewah & Minimalis**: Menggunakan font serif **Fraunces** untuk heading utama, **Manrope** untuk body teks, dan wordmark brand **"TaskFlow"** yang menggunakan font tulisan tangan **Pinyon Script** yang elegan tanpa ikon persegi lagi.
-- **Responsive Layout**: Antarmuka responsif ramah mobile. Papan Kanban dikonversi menjadi tab/scroll horizontal di layar ponsel, dan panel carousel auth disembunyikan di bawah layar tablet (`md`).
+> Akun demo bisa didaftarkan sendiri lewat halaman Register — tidak ada data pengguna lain yang perlu dijaga privasinya, jadi aman untuk dicoba bebas.
 
 ---
 
-## Tech Stack
+## 📸 Screenshot
 
-### Backend
-- **Runtime**: Node.js
-- **Framework**: Express.js
-- **Database**: MySQL
-- **ORM**: Sequelize
-- **Autentikasi**: JWT (jsonwebtoken) & bcryptjs (password hashing)
+<!--
+Ganti bagian ini dengan screenshot aplikasi kamu:
+1. Simpan gambar di folder `screenshots/`
+2. Ganti path di bawah sesuai nama file kamu
 
-### Frontend
-- **Framework**: React (Vite)
-- **Styling**: Tailwind CSS v4
-- **Animation**: GSAP (GreenSock Animation Platform)
-- **HTTP Client**: Axios
-- **Charts**: Chart.js (`react-chartjs-2`)
+![Dashboard](screenshots/dashboard.png)
+![Kanban Board](screenshots/kanban.png)
+![Login](screenshots/login.png)
+-->
 
----
+## ✨ Fitur
 
-## Struktur Folder Project
+- Autentikasi user (register & login) dengan JWT, password di-hash dengan bcrypt
+- CRUD Project — buat, lihat, edit, hapus (cascade delete ke semua task di dalamnya)
+- CRUD Task dalam tiap project — judul, deskripsi, status, deadline
+- Kanban board 3 kolom (To Do / In Progress / Selesai), filter berdasarkan status
+- Dashboard dengan ringkasan chart (doughnut) progres task + statistik project
+- Setiap user hanya bisa mengakses data miliknya sendiri
+- UI dengan sistem desain konsisten, animasi GSAP, dan layout responsif (sidebar off-canvas di mobile)
+
+## 🛠️ Tech Stack
+
+| Layer | Teknologi |
+|---|---|
+| Backend | Node.js, Express.js |
+| Database | MySQL (TiDB Cloud — MySQL-compatible, serverless) |
+| ORM | Sequelize |
+| Autentikasi | JWT (jsonwebtoken), bcrypt |
+| Frontend | React (Vite), Tailwind CSS v4 |
+| HTTP Client | Axios |
+| Chart | react-chartjs-2 |
+| Animasi | GSAP |
+| Deployment | Vercel (frontend & backend, backend sebagai serverless function) |
+
+## 🏗️ Arsitektur Deployment
+
+```
+┌─────────────────┐      HTTPS       ┌──────────────────┐      SSL      ┌──────────────┐
+│  Frontend        │ ───────────────▶│  Backend           │─────────────▶│  TiDB Cloud   │
+│  (Vercel, React) │◀─────────────── │  (Vercel Serverless)│◀───────────── │  (MySQL)      │
+└─────────────────┘     JSON/REST    └──────────────────┘   Sequelize   └──────────────┘
+```
+
+Backend dijalankan sebagai Vercel Serverless Function (bukan server yang selalu menyala), terhubung ke database MySQL-compatible di TiDB Cloud melalui koneksi SSL.
+
+## 🚀 Menjalankan di Lokal
+
+### Prasyarat
+- Node.js 18+
+- MySQL lokal (bisa pakai Laragon/XAMPP) **atau** langsung pakai kredensial TiDB Cloud
+
+### 1. Clone repo
+
+```bash
+git clone https://github.com/USERNAME/taskflow.git
+cd taskflow
+```
+
+### 2. Setup Backend
+
+```bash
+cd backend
+npm install
+cp .env.example .env
+```
+
+Isi `.env` sesuai environment kamu:
+
+```
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASS=
+DB_NAME=taskflow_db
+DB_SSL=false
+JWT_SECRET=isi_dengan_string_acak
+PORT=5000
+FRONTEND_URL=http://localhost:5173
+```
+
+Buat database (kalau pakai MySQL lokal):
+
+```sql
+CREATE DATABASE taskflow_db;
+```
+
+Jalankan server:
+
+```bash
+npm start
+```
+
+Backend berjalan di `http://localhost:5000`.
+
+### 3. Setup Frontend
+
+Buka terminal baru:
+
+```bash
+cd frontend
+npm install
+cp .env.example .env
+```
+
+Isi `.env`:
+
+```
+VITE_API_URL=http://localhost:5000/api
+```
+
+Jalankan dev server:
+
+```bash
+npm run dev
+```
+
+Frontend berjalan di `http://localhost:5173`.
+
+## 📡 Daftar Endpoint API
+
+### Auth
+| Method | Endpoint | Keterangan |
+|---|---|---|
+| POST | `/api/auth/register` | Daftar user baru |
+| POST | `/api/auth/login` | Login, mengembalikan JWT |
+
+### Projects *(butuh token)*
+| Method | Endpoint | Keterangan |
+|---|---|---|
+| GET | `/api/projects` | List semua project milik user |
+| POST | `/api/projects` | Buat project baru |
+| GET | `/api/projects/:id` | Detail satu project |
+| PUT | `/api/projects/:id` | Update project |
+| DELETE | `/api/projects/:id` | Hapus project (cascade ke task) |
+
+### Tasks *(butuh token)*
+| Method | Endpoint | Keterangan |
+|---|---|---|
+| GET | `/api/projects/:projectId/tasks` | List task dalam project (`?status=` untuk filter) |
+| POST | `/api/projects/:projectId/tasks` | Buat task baru |
+| PUT | `/api/tasks/:id` | Update task (termasuk ubah status) |
+| DELETE | `/api/tasks/:id` | Hapus task |
+
+### Dashboard *(butuh token)*
+| Method | Endpoint | Keterangan |
+|---|---|---|
+| GET | `/api/dashboard/summary` | Ringkasan jumlah task per status & total project |
+
+## 📁 Struktur Folder
 
 ```
 taskflow/
 ├── backend/
+│   ├── api/                # Entry point serverless (Vercel)
 │   ├── src/
-│   │   ├── config/         # Konfigurasi database Sequelize
-│   │   ├── controllers/    # Logika bisnis (MVC Controllers)
-│   │   ├── middleware/     # JWT authentication & error handler
-│   │   ├── models/         # Skema tabel database (Sequelize Models)
-│   │   └── routes/         # Endpoint API router
-│   ├── server.js           # Main Entry Point Backend
-│   └── create-db.js        # Script pembantu inisialisasi Database
-├── frontend/
-│   ├── src/
-│   │   ├── api/            # Konfigurasi Axios client instance
-│   │   ├── components/     # Reusable UI components & layouts (Sidebar, AppShell, AuthCarousel)
-│   │   ├── context/        # React Context (AuthContext)
-│   │   ├── data/           # Konfigurasi data static (authSlides.js)
-│   │   ├── hooks/          # Custom hooks (useProjects, dll)
-│   │   ├── pages/          # Halaman utama (AuthPage, DashboardPage, ProjectDetailPage)
-│   │   ├── index.css       # Token & utility styling Tailwind CSS
-│   │   └── main.jsx        # Entry Point Frontend
+│   │   ├── config/         # Koneksi database
+│   │   ├── controllers/    # Logic tiap endpoint
+│   │   ├── middleware/     # Auth JWT, error handler
+│   │   ├── models/         # Model Sequelize (User, Project, Task)
+│   │   ├── routes/         # Definisi route
+│   │   └── app.js
+│   ├── server.js           # Entry point untuk development lokal
+│   └── vercel.json
+└── frontend/
+    ├── src/
+    │   ├── api/             # Axios instance
+    │   ├── components/      # Komponen shared, layout, project, task
+    │   ├── context/         # AuthContext
+    │   ├── hooks/           # useProjects, useTasks
+    │   ├── pages/           # AuthPage, DashboardPage, ProjectDetailPage
+    │   └── utils/           # GSAP animation helpers
+    └── vercel.json
 ```
 
----
+## 🧩 Tantangan Selama Development & Deployment
 
-## Panduan Instalasi Lokal
+Beberapa masalah nyata yang ditemukan dan diselesaikan selama proses (dicatat karena relevan untuk didiskusikan saat interview):
 
-### Prasyarat
-- Node.js (v18+)
-- MySQL Server berjalan lokal
+- **CSS cascade layer (Tailwind v4):** reset CSS (`* { margin: 0; padding: 0 }`) yang tidak dibungkus `@layer base` ternyata menimpa seluruh utility class spacing, menyebabkan layout tidak center dan elemen saling bertabrakan.
+- **Sequelize + dynamic require di lingkungan serverless:** Vercel gagal mem-bundle `mysql2` karena Sequelize memanggilnya lewat `require()` dinamis berbasis string, sehingga bundler tidak mendeteksinya sebagai dependency. Diselesaikan dengan menambahkan static import eksplisit.
+- **CORS di lingkungan multi-domain:** origin frontend dan backend berada di domain Vercel yang berbeda, sehingga `FRONTEND_URL` di environment variable backend harus disertakan lengkap dengan scheme (`https://`), bukan hanya domain.
+- **IP allowlist database cloud:** TiDB Cloud secara default membatasi akses berdasarkan IP, sementara backend serverless tidak memiliki IP statis — diselesaikan dengan mengizinkan akses publik dan tetap mengandalkan autentikasi user/password database.
+- **SPA routing pada static hosting:** refresh halaman di route selain `/` (misalnya `/register`) menghasilkan 404 di Vercel karena file fisik untuk path tersebut tidak ada — diselesaikan dengan rewrite rule di `vercel.json` agar semua path di-fallback ke `index.html`.
 
-### Langkah 1: Setup Backend
-1. Masuk ke folder backend:
-   ```bash
-   cd backend
-   ```
-2. Instal semua dependensi:
-   ```bash
-   npm install
-   ```
-3. Buat database MySQL kosong baru bernama `taskflow_db` (atau nama lain pilihan Anda).
-4. Buat file `.env` di dalam folder `backend/` menggunakan referensi dari `.env.example`:
-   ```env
-   PORT=5000
-   DB_HOST=127.0.0.1
-   DB_USER=root
-   DB_PASSWORD=password_mysql_kamu
-   DB_NAME=taskflow_db
-   JWT_SECRET=supersecretkeys3cr3t
-   NODE_ENV=development
-   ```
-5. Jalankan script inisialisasi tabel database (Sequelize sync):
-   ```bash
-   node create-db.js
-   ```
-6. Jalankan server backend (secara default di port 5000):
-   ```bash
-   npm start
-   # Atau jika ingin menggunakan nodemon secara global/lokal
-   npx nodemon server.js
-   ```
+## 👤 Author
 
-### Langkah 2: Setup Frontend
-1. Masuk ke folder frontend:
-   ```bash
-   cd ../frontend
-   ```
-2. Instal semua dependensi:
-   ```bash
-   npm install
-   ```
-3. Pastikan konfigurasi `.env` mengarah ke backend yang aktif (biasanya target endpoint API proxy berada di port 5000).
-4. Jalankan server pengembangan Vite:
-   ```bash
-   npm run dev
-   ```
-5. Buka tautan lokal yang diberikan di terminal (contoh: `http://localhost:5173` atau `http://localhost:5176`) pada browser Anda.
+Athallah Muhammad Syaffa
 
----
+## 📄 Lisensi
 
-## Daftar Endpoint API Utama
-
-| Method | Endpoint | Keterangan | Proteksi |
-|---|---|---|---|
-| **POST** | `/api/auth/register` | Mendaftarkan akun baru | Publik |
-| **POST** | `/api/auth/login` | Autentikasi masuk akun | Publik |
-| **GET** | `/api/projects` | Mengambil seluruh project milik user | Private (JWT) |
-| **POST** | `/api/projects` | Membuat project baru | Private (JWT) |
-| **GET** | `/api/projects/:id` | Detail project & daftar task di dalamnya | Private (JWT) |
-| **PUT** | `/api/projects/:id` | Memperbarui data project | Private (JWT) |
-| **DELETE**| `/api/projects/:id` | Menghapus project (dan cascade task) | Private (JWT) |
-| **POST** | `/api/projects/:projectId/tasks`| Menambahkan task baru ke project | Private (JWT) |
-| **PUT** | `/api/tasks/:id` | Memperbarui task (status, judul, dll) | Private (JWT) |
-| **DELETE**| `/api/tasks/:id` | Menghapus task | Private (JWT) |
-| **GET** | `/api/dashboard/summary` | Summary jumlah task per-status | Private (JWT) |
+Project ini dibuat untuk keperluan portofolio.

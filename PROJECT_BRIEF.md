@@ -1,9 +1,5 @@
 # PROJECT_BRIEF.md — TaskFlow
 
-> File ini adalah sumber kebenaran (source of truth) untuk AI coding agent.
-> Taruh file ini di **root folder project**, dan setiap kali membuka sesi baru
-> di Antigravity, minta agent membaca file ini dulu sebelum mulai kerja.
-
 ## Ringkasan Produk
 
 TaskFlow adalah aplikasi manajemen proyek & task sederhana (mirip Trello/Jira minimalis). User bisa membuat project, menambah task di dalamnya, mengubah status task (To Do / In Progress / Done), dan melihat ringkasan progres di dashboard.
